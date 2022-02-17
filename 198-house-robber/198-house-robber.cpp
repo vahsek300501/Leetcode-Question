@@ -1,28 +1,18 @@
 class Solution {
 public:
-    int robRecursive(vector<int> &nums, int cntIndex) {
-        if (cntIndex >= nums.size()) {
-            return 0;
+    int robDynamicProgramming(vector<int> &nums) {
+        if (nums.size() == 1)
+            return nums.at(0);
+        int dp[nums.size()];
+        memset(dp, 0, sizeof(dp));
+        dp[0] = nums.at(0);
+        dp[1] = max(nums.at(0), nums.at(1));
+        for (int i = 2; i < nums.size(); i++) {
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums.at(i));
         }
-        int inclusive = robRecursive(nums, cntIndex + 2) + nums.at(cntIndex);
-        int exclusive = robRecursive(nums, cntIndex + 1);
-        return max(inclusive, exclusive);
+        return dp[nums.size() - 1];
     }
-
-    int robMemoization(vector<int> &nums, int cntIndex, int *dp) {
-        if (cntIndex >= nums.size())
-            return 0;
-        if (dp[cntIndex] != -1)
-            return dp[cntIndex];
-        int inclusive = robMemoization(nums, cntIndex + 2, dp)+ nums.at(cntIndex);
-        int exclusive = robMemoization(nums, cntIndex + 1, dp);
-        dp[cntIndex] = max(inclusive, exclusive);
-        return max(inclusive, exclusive);
-    }
-
-    int rob(vector<int> &nums) {
-        int dp[nums.size() + 1];
-        memset(dp, -1, sizeof(dp));
-        return robMemoization(nums, 0, dp);
+    int rob(vector<int>& nums) {
+        return robDynamicProgramming(nums);   
     }
 };
