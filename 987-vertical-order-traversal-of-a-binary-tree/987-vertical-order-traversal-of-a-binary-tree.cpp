@@ -42,8 +42,6 @@ public:
 
     vector<vector<int>> verticalTraversal(TreeNode *root) {
         vector<vector<int>> ans;
-        if(root == nullptr)
-            return ans;
         vector<NodeTraversal> nodes;
         inorder(root, nodes, 0, 0);
         sort(nodes.begin(), nodes.end(), compare);
