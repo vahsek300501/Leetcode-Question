@@ -45,6 +45,8 @@ public:
             if (frontNode->right != nullptr)
                 traversalQueue.push(frontNode->right);
         }
+        traversalQueue.pop();
+        delete endingNode;
         return root;
     }
 };
