@@ -1,32 +1,11 @@
 class Solution {
 public:
-    int deleteAndEarnRecursive(vector<int> &nums, unordered_map<int, int> freqMap, int cntIndex) {
-        if (cntIndex >= nums.size())
-            return 0;
-        int inclusive =
-                (nums.at(cntIndex) * freqMap[nums.at(cntIndex)]) + deleteAndEarnRecursive(nums, freqMap, cntIndex + 2);
-        int exclusive = deleteAndEarnRecursive(nums, freqMap, cntIndex + 1);
-        return max(inclusive, exclusive);
-    }
-
-    int deleteAndEarnMemoization(vector<int> &nums, unordered_map<int, int> freqMap, int cntIndex, int *dp) {
-        if (cntIndex >= nums.size())
-            return 0;
-        if (dp[cntIndex] != -1)
-            return dp[cntIndex];
-        int inclusive =
-                (nums.at(cntIndex) * freqMap[nums.at(cntIndex)]) +
-                deleteAndEarnMemoization(nums, freqMap, cntIndex + 2, dp);
-        int exclusive = deleteAndEarnMemoization(nums, freqMap, cntIndex + 1, dp);
-        dp[cntIndex] = max(inclusive, exclusive);
-        return max(inclusive, exclusive);
-    }
-
-    static int deleteAndEarnDynamicProgramming(vector<int> &nums, unordered_map<int, int> freqMap) {
+    int deleteAndEarnUtil(vector<int> &nums, unordered_map<int, int> freqMap) {
+        if (nums.size() == 1)
+            return nums.at(0) * freqMap[nums.at(0)];
         int dp[nums.size()];
         dp[0] = nums.at(0) * freqMap[nums.at(0)];
         dp[1] = nums.at(1) * freqMap[nums.at(1)];
-
         for (int i = 2; i < nums.size(); i++) {
             int inclusive = (nums.at(i) * freqMap[nums.at(i)]) + dp[i - 2];
             int exclusive = dp[i - 1];
@@ -47,6 +26,6 @@ public:
         for (int &num : nums) {
             freqMap[num] += 1;
         }
-        return deleteAndEarnDynamicProgramming(finalNums, freqMap);
+        return deleteAndEarnUtil(finalNums, freqMap);
     }
 };
