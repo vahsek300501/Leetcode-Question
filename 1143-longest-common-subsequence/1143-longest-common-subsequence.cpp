@@ -30,9 +30,8 @@ public:
         }
         int a = lcsMemoization(str1, str2, ind1 + 1, ind2, dp);
         int b = lcsMemoization(str1, str2, ind1, ind2 + 1, dp);
-        int c = lcsMemoization(str1, str2, ind1 + 1, ind2 + 1, dp);
-        dp[ind1][ind2] = max(a, max(b, c));
-        return max(a, max(b, c));
+        dp[ind1][ind2] = max(a, b);
+        return max(a,b);
     }
 
     int lcsMemoizationUtil(string str1, string str2) {
@@ -78,6 +77,6 @@ public:
     }
 
     int longestCommonSubsequence(string text1, string text2) {
-        return lcsDynamicProgramming(text1, text2);
+        return lcsDynamicProgramming(text1,text2);
     }
 };
