@@ -6,7 +6,7 @@ public:
         vector<int> ans(arr.size(), -1);
         stack<pair<int, int>> minStack;
         for (int i = (int) arr.size() - 1; i >= 0; i--) {
-            while (!minStack.empty() && minStack.top().first >= arr.at(i)) {
+            while (!minStack.empty() && minStack.top().first > arr.at(i)) {
                 minStack.pop();
             }
             if (minStack.empty()) {
@@ -24,7 +24,7 @@ public:
         vector<int> ans(arr.size(), -1);
         stack<pair<int, int>> minStack;
         for (int i = 0; i < arr.size(); i++) {
-            while (!minStack.empty() && minStack.top().first > arr.at(i)) {
+            while (!minStack.empty() && minStack.top().first >= arr.at(i)) {
                 minStack.pop();
             }
             if (minStack.empty()) {
