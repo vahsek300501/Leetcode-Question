@@ -34,9 +34,7 @@ string reverseWord(string str){
   int i = 0;
   int j = str.length()-1;
   while(i <= j) {
-      char tmp = str.at(i);
-      str.at(i) = str.at(j);
-      str.at(j) = tmp;
+      swap(str.at(i),str.at(j));
       i++;
       j--;
   }
