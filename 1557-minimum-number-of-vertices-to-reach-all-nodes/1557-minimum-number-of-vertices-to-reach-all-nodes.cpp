@@ -1,11 +1,7 @@
 class Solution {
 public:
     vector<int> findSmallestSetOfVertices(int n, vector<vector<int>> &edges) {
-        vector<bool> inNodes;
-        inNodes.reserve(n);
-        for (int i = 0; i < n; i++) {
-            inNodes.push_back(false);
-        }
+        vector<bool> inNodes(n,false); 
         for(vector<int> edge: edges) {
             inNodes[edge[1]] = true;
         }
