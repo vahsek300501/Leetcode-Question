@@ -1,32 +1,50 @@
 class Solution {
 public:
-    void permuteUniqueUtil(vector<int> &nums, string cntNum, vector<vector<int>> &ans,
-                           unordered_map<string, bool> &isThere, vector<int> &cntAns, vector<bool> &visited) {
-        if (cntAns.size() >= nums.size()) {
-            if (isThere.find(cntNum) == isThere.end()) {
-                ans.push_back(cntAns);
-                isThere[cntNum] = true;
+    bool nextPermutation(vector<int> &nums) {
+        bool foundInd = false;
+        int ind = -1;
+        for (int i = (int) nums.size() - 2; i >= 0; i--) {
+            if (nums.at(i) < nums.at(i + 1)) {
+                foundInd = true;
+                ind = i;
+                break;
             }
-            return;
         }
-        for (int i = 0; i < nums.size(); i++) {
-            if (visited[i])
-                continue;
-            visited[i] = true;
-            cntAns.push_back(nums.at(i));
-            string tmp = cntNum + to_string(nums.at(i));
-            permuteUniqueUtil(nums, tmp, ans, isThere, cntAns, visited);
-            visited[i] = false;
-            cntAns.pop_back();
+        if (!foundInd) {
+            sort(nums.begin(), nums.end());
+            return false;
         }
+        int nextGreaterInd = -1;
+        int nextGreaterElement = INT_MAX;
+        for (int i = ind + 1; i < nums.size(); i++) {
+            if (nums.at(i) > nums.at(ind) && nums.at(i) < nextGreaterElement) {
+                nextGreaterElement = nums.at(i);
+                nextGreaterInd = i;
+            }
+        }
+        swap(nums.at(ind), nums.at(nextGreaterInd));
+        vector<int> tmpVec;
+        for (int i = ind + 1; i < nums.size(); i++) {
+            tmpVec.push_back(nums.at(i));
+        }
+        sort(tmpVec.begin(), tmpVec.end());
+        int i = ind + 1;
+        for (int sortedNum : tmpVec) {
+            nums.at(i) = sortedNum;
+            i++;
+        }
+        return true;
     }
 
     vector<vector<int>> permuteUnique(vector<int> &nums) {
-        vector<bool> visited(nums.size(), false);
         vector<vector<int>> ans;
-        unordered_map<string, bool> isThere;
-        vector<int> cntAns;
-        permuteUniqueUtil(nums, "", ans, isThere, cntAns, visited);
+        sort(nums.begin(), nums.end());
+        while (true) {
+            bool found = nextPermutation(nums);
+            ans.push_back(nums);
+            if (!found)
+                break;
+        }
         return ans;
     }
 };
