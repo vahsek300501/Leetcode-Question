@@ -2,7 +2,6 @@ class Solution {
 public:
     int minReorder(int n, vector<vector<int>> &connections) {
         vector<vector<int>> graph;
-        vector<vector<int>> finalGraph;
         unordered_map<int, unordered_map<int, int>> initialEdges;
         vector<bool> visited(n, false);
 
