@@ -7,47 +7,50 @@ using namespace std;
 
  // } Driver Code Ends
 // User function template for C++
-#include<bits/stdc++.h>
+
 class Solution{
     public:
-    void getPathUtil(vector<vector<int>> &m, bool **visited, int n, vector<string> &ans, string cntPath, int cntX,
-                     int cntY) {
-        if (cntX < 0 || cntY < 0) {
+    void getPaths(vector<vector<int>> &mat, int n, string &cntAns, int cntX, int cntY, int targetX, int targetY,
+                  vector<string> &ans, vector<vector<bool>> &visited) {
+        if (cntX < 0 || cntY < 0 || cntX >= n || cntY >= n)
             return;
-        }
-        if (cntX >= n || cntY >= n) {
+        if (mat[cntX][cntY] == 0)
             return;
-        }
-        if (m.at(cntX).at(cntY) == 0) {
+        if (visited[cntX][cntY])
             return;
-        }
-        if (visited[cntX][cntY]) {
-            return;
-        }
-        if (cntX == n - 1 && cntY == n - 1) {
-            ans.push_back(cntPath);
-            return;
+        if (cntX == targetX && cntY == targetY) {
+            ans.push_back(cntAns);
         }
         visited[cntX][cntY] = true;
-        getPathUtil(m, visited, n, ans, cntPath + 'D', cntX + 1, cntY);
-        getPathUtil(m, visited, n, ans, cntPath + 'U', cntX - 1, cntY);
-        getPathUtil(m, visited, n, ans, cntPath + 'R', cntX, cntY + 1);
-        getPathUtil(m, visited, n, ans, cntPath + 'L', cntX, cntY - 1);
+        cntAns.push_back('L');
+        getPaths(mat, n, cntAns, cntX, cntY - 1, targetX, targetY, ans, visited);
+        cntAns.pop_back();
+        cntAns.push_back('R');
+        getPaths(mat, n, cntAns, cntX, cntY + 1, targetX, targetY, ans, visited);
+        cntAns.pop_back();
+        cntAns.push_back('D');
+        getPaths(mat, n, cntAns, cntX + 1, cntY, targetX, targetY, ans, visited);
+        cntAns.pop_back();
+        cntAns.push_back('U');
+        getPaths(mat, n, cntAns, cntX - 1, cntY, targetX, targetY, ans, visited);
+        cntAns.pop_back();
         visited[cntX][cntY] = false;
     }
 
     vector<string> findPath(vector<vector<int>> &m, int n) {
-        bool **visited = new bool *[n];
+        vector<string> ans;
+        vector<vector<bool>> visited;
         for (int i = 0; i < n; i++) {
-            visited[i] = new bool[n];
+            vector<bool> tmp;
+            visited.push_back(tmp);
         }
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                visited[i][j] = false;
+                visited[i].push_back(false);
             }
         }
-        vector<string> ans;
-        getPathUtil(m, visited, n, ans, "", 0, 0);
+        string cntAns;
+        getPaths(m, n, cntAns, 0, 0, n - 1, n - 1, ans, visited);
         return ans;
     }
 };
