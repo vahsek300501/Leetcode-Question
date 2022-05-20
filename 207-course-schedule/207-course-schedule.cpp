@@ -6,12 +6,14 @@ public:
         dfsVisited[cntIndex] = true;
         vector<int> edges = graph[cntIndex];
         for (int edge : edges) {
-            if(!visited[edge]) {
+            if (visited[edge]) {
+                if (dfsVisited[edge])
+                    return true;
+            } else {
                 bool isCycleFound = detectCycleDirectedDFS(graph, visited, dfsVisited, edge);
                 if (isCycleFound)
                     return true;
-            } else if(dfsVisited[edge])
-                return true;
+            }
         }
         dfsVisited[cntIndex] = false;
         return false;
