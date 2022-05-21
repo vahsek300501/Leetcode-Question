@@ -1,33 +1,34 @@
 class Solution {
 public:
-    bool dfs(vector<vector<int>> &graph,bool * visited, int * color,int cntNum,int cntIndex) {
-        visited[cntIndex] = true;
-        color[cntIndex] = cntNum;
-        
-        for(int child:graph[cntIndex]) {
-            if(!visited[child]) {
-                bool foundDfs = dfs(graph,visited,color,cntNum^1,child);    
-                if(!foundDfs)
-                   return false;
-            } else{
-                if(color[child] == color[cntIndex])
-                    return false;
+    bool isBipartite(vector<vector<int>> &graph) {
+        queue<pair<int, int>> traversalQueue;
+        vector<bool> visited(graph.size(), false);
+        vector<int> colorArr(graph.size(), -1);
+
+        for (int i = 0; i < graph.size(); i++) {
+            if (!visited[i]) {
+                traversalQueue.push(make_pair(i, 0));
+                visited[i] = true;
+                colorArr[i] = 0;
+
+                while (!traversalQueue.empty()) {
+                    pair<int, int> top = traversalQueue.front();
+                    traversalQueue.pop();
+                    vector<int> edges = graph[top.first];
+                    int color = top.second == 0 ? 1 : 0;
+                    for (int edge:edges) {
+                        if (!visited[edge]) {
+                            traversalQueue.push(make_pair(edge, color));
+                            visited[edge] = true;
+                            colorArr[edge] = color;
+                            continue;
+                        } else if (colorArr[edge] == top.second)
+                            return false;
+                    }
+                }
             }
         }
-        return true;
-    }
-    bool isBipartite(vector<vector<int>>& graph) {
-        int n = graph.size();
-        bool * visited = new bool[graph.size()];
-        int * color = new int[graph.size()];
-        for(int i = 0; i < n; i++) {
-            visited[i] = false;
-            color[i] = -1;
-        }
-        for(int i = 0;i<n;i++) {
-            if(!visited[i] && !dfs(graph,visited,color,0,i))
-                return false;
-        }
+
         return true;
     }
 };
