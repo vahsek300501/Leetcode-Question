@@ -22,17 +22,26 @@ public:
 
     long long int maximumProduct = 0;
 
-    long long int maxProductUtil(TreeNode *root, long long int totalSum) {
+    long long int maxProductUtil(TreeNode *root, int totalSum) {
         if (root == nullptr)
             return 0;
 
         long long int leftSubTreeSum = maxProductUtil(root->left, totalSum);
         long long int rightSubTreeSum = maxProductUtil(root->right, totalSum);
-        long long int cntSubtreeSum = leftSubTreeSum + rightSubTreeSum + root->val;
-        int remainingSum = totalSum - cntSubtreeSum;
-        maximumProduct = max(maximumProduct,(remainingSum * cntSubtreeSum));
 
-        return cntSubtreeSum;
+        if (leftSubTreeSum != 0) {
+            long long int remainingTreeSum = totalSum - leftSubTreeSum;
+            long long int tmpProduct = ((leftSubTreeSum) * (remainingTreeSum));
+            maximumProduct = max(maximumProduct, tmpProduct);
+        }
+
+        if (rightSubTreeSum != 0) {
+            long long int remainingTreeSum = totalSum - rightSubTreeSum;
+            long long int tmpProduct = ((rightSubTreeSum) * (remainingTreeSum));
+            maximumProduct = max(maximumProduct, tmpProduct);
+        }
+
+        return leftSubTreeSum + rightSubTreeSum + root->val;
     }
 
     int maxProduct(TreeNode *root) {
