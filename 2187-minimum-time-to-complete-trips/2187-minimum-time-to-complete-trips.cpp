@@ -3,8 +3,8 @@ public:
     bool isPossibleMinTime(vector<int> &time, long long int totalTrips, long long int cntTime) {
         long long int cntTrips = 0;
         for (int i : time) {
-            if (i > cntTime)
-                break;
+            // if (i > cntTime)
+            //     break;
             cntTrips += floor(cntTime / i);
         }
 
@@ -14,7 +14,7 @@ public:
     }
 
     long long minimumTime(vector<int> &time, int totalTrips) {
-        sort(time.begin(), time.end());
+        // sort(time.begin(), time.end());
         long long int low = 1;
         long long int high = 100000000000000;
         long long int ans = LONG_LONG_MAX;
