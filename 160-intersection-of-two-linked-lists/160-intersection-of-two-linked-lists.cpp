@@ -9,35 +9,40 @@
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        ListNode* t1=headA;
-        ListNode* t2=headB;
-        int l1=1;
-        int l2=1;
-        while (t1->next){
-            l1+=1;
-            t1=t1->next;
+        int lengthA = 0;
+        int lengthB = 0;
+        for(ListNode * tmp = headA;tmp!=NULL;tmp = tmp->next)
+            lengthA++;
+        for(ListNode * tmp = headB;tmp!=NULL;tmp = tmp->next)
+            lengthB++;
+        
+        ListNode * longer = NULL;
+        ListNode * shorter = NULL;
+        int d = 0;
+        if(lengthA >= lengthB) {
+            d = lengthA - lengthB;
+            longer = headA;
+            shorter = headB;
         }
-        while (t2->next){
-            l2+=1;
-            t2=t2->next;
+        else {
+            d = lengthB - lengthA;
+            longer = headB;
+            shorter = headA;
         }
-        if (t1!=t2){
-            return NULL;
+        ListNode * ans = NULL;
+        while(longer !=NULL && shorter!=NULL) {
+            if(d!=0) {
+                longer = longer->next;
+                d--;
+                continue;
+            }
+            if(longer == shorter) {
+                ans = longer;
+                break;
+            }
+            longer = longer->next;
+            shorter = shorter->next;
         }
-        int move1 = max(0,l1-l2);
-        int move2 = max(0,l2-l1);
-        while (move1>0){
-            headA=headA->next;
-            move1--;
-        }
-        while (move2>0){
-            headB=headB->next;
-            move2--;
-        }
-        while (headA!=headB){
-            headB=headB->next;
-            headA=headA->next;
-        }
-        return headA;
+        return ans;
     }
 };
