@@ -9,54 +9,57 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-class NodeTraversal {
-public:
-    int nodeVal;
-    int x;
-    int y;
-};
-
-bool compare(NodeTraversal o1, NodeTraversal o2) {
-    if (o1.x < o2.x)
-        return true;
-    if (o1.x == o2.x && o1.y < o2.y)
-        return true;
-    if (o1.x == o2.x && o1.y == o2.y && o1.nodeVal < o2.nodeVal)
-        return true;
-    return false;
-}
-
 class Solution {
 public:
-    void inorder(TreeNode *root, vector<NodeTraversal> &nodes, int x, int y) {
+    void inorderTraversal(TreeNode *root, vector<pair<int, pair<int, int>>> &ans, int cntX, int cntY) {
         if (root == nullptr)
             return;
-        inorder(root->left, nodes, x - 1, y + 1);
-        NodeTraversal tmpNode{};
-        tmpNode.nodeVal = root->val;
-        tmpNode.x = x;
-        tmpNode.y = y;
-        nodes.push_back(tmpNode);
-        inorder(root->right, nodes, x + 1, y + 1);
+        inorderTraversal(root->left, ans, cntX + 1, cntY - 1);
+        pair<int, pair<int, int>> tmp;
+        tmp.first = root->val;
+        tmp.second.first = cntX;
+        tmp.second.second = cntY;
+        ans.push_back(tmp);
+        inorderTraversal(root->right, ans, cntX + 1, cntY + 1);
+    }
+
+    static bool comparator(pair<int, pair<int, int>> &o1, pair<int, pair<int, int>> &o2) {
+        if (o1.second.second < o2.second.second)
+            return true;
+        if (o1.second.second == o2.second.second && o1.second.first < o2.second.first)
+            return true;
+        if (o1.second.second == o2.second.second && o1.second.first == o2.second.first && o1.first < o2.first)
+            return true;
+        return false;
     }
 
     vector<vector<int>> verticalTraversal(TreeNode *root) {
-        vector<vector<int>> ans;
-        if(root == nullptr)
-            return ans;
-        vector<NodeTraversal> nodes;
-        inorder(root, nodes, 0, 0);
-        sort(nodes.begin(), nodes.end(), compare);
-        int distinctArrays = nodes.at(nodes.size() - 1).x - nodes.at(0).x + 1;
-        for (int i = 0; i < distinctArrays; i++) {
-            vector<int> tmp;
-            ans.push_back(tmp);
+        vector<vector<int>> finalAns;
+        if (root == nullptr)
+            return finalAns;
+        vector<pair<int, pair<int, int>>> ans;
+        inorderTraversal(root, ans, 0, 0);
+        sort(ans.begin(), ans.end(), comparator);
+        for (auto &an : ans) {
+            cout << an.first << " ";
         }
-        int tmpIncrease = 0 - nodes.at(0).x;
-        for (int i = 0; i < nodes.size(); i++) {
-            NodeTraversal tmpNode = nodes.at(i);
-            ans.at(tmpNode.x + tmpIncrease).push_back(tmpNode.nodeVal);
+        int j = 0;
+        for (int i = 0; i < ans.size(); i++) {
+            if (i == 0) {
+                vector<int> tmp;
+                tmp.push_back(ans.at(i).first);
+                finalAns.push_back(tmp);
+                continue;
+            }
+            if (ans[i].second.second == ans.at(i - 1).second.second) {
+                finalAns[j].push_back(ans[i].first);
+            } else {
+                vector<int> tmp;
+                tmp.push_back(ans.at(i).first);
+                finalAns.push_back(tmp);
+                j++;
+            }
         }
-        return ans;
+        return finalAns;
     }
 };
