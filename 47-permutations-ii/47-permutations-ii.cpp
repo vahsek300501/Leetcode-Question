@@ -1,50 +1,37 @@
 class Solution {
 public:
-    bool nextPermutation(vector<int> &nums) {
-        bool foundInd = false;
-        int ind = -1;
-        for (int i = (int) nums.size() - 2; i >= 0; i--) {
-            if (nums.at(i) < nums.at(i + 1)) {
-                foundInd = true;
-                ind = i;
-                break;
+    void
+    permuteUniqueUtil(vector<vector<int>> &ans, vector<int> &cntAns, unordered_map<int, int> &freqMap, int cntIndex,
+                      int n) {
+        if (cntIndex == n) {
+            ans.push_back(cntAns);
+            return;
+        }
+
+        auto itr = freqMap.begin();
+        while (itr != freqMap.end()) {
+            if (itr->second != 0) {
+                cntAns.push_back(itr->first);
+                itr->second = itr->second - 1;
+                permuteUniqueUtil(ans, cntAns, freqMap, cntIndex + 1, n);
+                cntAns.pop_back();
+                itr->second = itr->second + 1;
             }
+            itr++;
         }
-        if (!foundInd) {
-            sort(nums.begin(), nums.end());
-            return false;
-        }
-        int nextGreaterInd = -1;
-        int nextGreaterElement = INT_MAX;
-        for (int i = ind + 1; i < nums.size(); i++) {
-            if (nums.at(i) > nums.at(ind) && nums.at(i) < nextGreaterElement) {
-                nextGreaterElement = nums.at(i);
-                nextGreaterInd = i;
-            }
-        }
-        swap(nums.at(ind), nums.at(nextGreaterInd));
-        vector<int> tmpVec;
-        for (int i = ind + 1; i < nums.size(); i++) {
-            tmpVec.push_back(nums.at(i));
-        }
-        sort(tmpVec.begin(), tmpVec.end());
-        int i = ind + 1;
-        for (int sortedNum : tmpVec) {
-            nums.at(i) = sortedNum;
-            i++;
-        }
-        return true;
     }
 
     vector<vector<int>> permuteUnique(vector<int> &nums) {
+        unordered_map<int, int> freqMap;
         vector<vector<int>> ans;
-        sort(nums.begin(), nums.end());
-        while (true) {
-            bool found = nextPermutation(nums);
-            ans.push_back(nums);
-            if (!found)
-                break;
+        vector<int> cntAns;
+        for (int num : nums) {
+            if (freqMap.find(num) == freqMap.end())
+                freqMap[num] = 1;
+            else
+                freqMap[num] += 1;
         }
+        permuteUniqueUtil(ans, cntAns, freqMap, 0, nums.size());
         return ans;
     }
 };
