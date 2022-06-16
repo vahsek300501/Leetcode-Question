@@ -1,18 +1,18 @@
 class Solution {
 public:
-    int robDynamicProgramming(vector<int> &nums) {
-        if (nums.size() == 1)
-            return nums.at(0);
-        int dp[nums.size()];
-        memset(dp, 0, sizeof(dp));
-        dp[0] = nums.at(0);
-        dp[1] = max(nums.at(0), nums.at(1));
-        for (int i = 2; i < nums.size(); i++) {
-            dp[i] = max(dp[i - 1], dp[i - 2] + nums.at(i));
-        }
-        return dp[nums.size() - 1];
+    int robMemoization(vector<int> &nums, int cntIndex, vector<int> &dp) {
+        if (cntIndex >= nums.size())
+            return 0;
+        if (dp[cntIndex] != -1)
+            return dp[cntIndex];
+        int first = nums[cntIndex] + robMemoization(nums, cntIndex + 2, dp);
+        int second = robMemoization(nums, cntIndex + 1, dp);
+        dp[cntIndex] = max(first, second);
+        return max(first, second);
     }
-    int rob(vector<int>& nums) {
-        return robDynamicProgramming(nums);   
+
+    int rob(vector<int> &nums) {
+        vector<int> dp(nums.size() + 1, -1);
+        return robMemoization(nums, 0, dp);
     }
 };
