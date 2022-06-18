@@ -1,17 +1,20 @@
 class Solution {
 public:
-    int solve(int i, int j, int n, vector<vector<int>>&triangle, vector<vector<int>>&dp) {
-		if(i == n - 1)
-			return triangle[i][j];
-		if(dp[i][j] != -1)
-			return dp[i][j];
-		int bottom = triangle[i][j] + solve(i+1, j, n, triangle, dp);
-		int  bottom_right = triangle[i][j] + solve(i+1, j+1, n, triangle, dp);
-		return dp[i][j] = min(bottom, bottom_right);
-	}
-	int minimumTotal(vector<vector<int>>& triangle) {
-		int n = triangle.size();
-		vector<vector<int>>dp(n, vector<int>(n, -1));
-		return solve(0, 0, n, triangle, dp);
-	}
+    int
+    minimumTotalMemoization(vector<vector<int>> &triangle, int cntX, int cntY, int n, int m, vector<vector<int>> &dp) {
+        if (cntX < 0 || cntY < 0 || cntX >= n || cntY >= m)
+            return 0;
+        if (dp[cntX][cntY] != -1)
+            return dp[cntX][cntY];
+        int first = minimumTotalMemoization(triangle, cntX + 1, cntY, n, cntX + 2, dp) + triangle[cntX][cntY];
+        int second = minimumTotalMemoization(triangle, cntX + 1, cntY + 1, n, cntX + 2, dp) + triangle[cntX][cntY];
+        dp[cntX][cntY] = min(first, second);
+        return min(first, second);
+    }
+
+    int minimumTotal(vector<vector<int>> &triangle) {
+        int n = (int) triangle.size();
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        return minimumTotalMemoization(triangle, 0, 0, n, 1, dp);
+    }
 };
