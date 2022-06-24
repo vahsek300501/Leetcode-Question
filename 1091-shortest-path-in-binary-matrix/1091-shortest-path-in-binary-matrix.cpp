@@ -1,46 +1,37 @@
 class Solution {
 public:
     int shortestPathBinaryMatrix(vector<vector<int>> &grid) {
-        vector<int> xPos = {1, -1, 0, 0, 1, 1, -1, -1};
-        vector<int> yPos = {0, 0, 1, -1, 1, -1, 1, -1};
-        vector<vector<bool>> visited;
-        for (int i = 0; i < grid.size(); i++) {
-            vector<bool> tmp;
-            visited.push_back(tmp);
-        }
-        for (int i = 0; i < grid.size(); i++) {
-            for (int j = 0; j < grid.size(); j++) {
-                visited[i].push_back(false);
-            }
-        }
+        int n = (int) grid.size();
+        int m = (int) grid.at(0).size();
+        vector<vector<int>> distance(n, vector<int>(m, -1));
+        if (grid[0][0] == 1 || grid[n - 1][m - 1] == 1)
+            return -1;
         queue<pair<int, pair<int, int>>> traversalQueue;
         traversalQueue.push(make_pair(1, make_pair(0, 0)));
-        int minCount = INT_MAX;
-        int n = (int) grid.size();
-        visited[0][0] = true;
 
+        vector<int> xPos = {1, -1, 0, 0, 1, 1, -1, -1};
+        vector<int> yPos = {0, 0, 1, -1, 1, -1, 1, -1};
+
+        distance[0][0] = 1;
         while (!traversalQueue.empty()) {
             pair<int, pair<int, int>> top = traversalQueue.front();
-            int cntX = top.second.first;
-            int cntY = top.second.second;
             traversalQueue.pop();
-
-            if (grid[cntX][cntY] == 1)
-                continue;
-            if (cntX == n - 1 && cntY == n - 1)
-                minCount = min(minCount, top.first);
+            if (top.second.first == n - 1 && top.second.second == m - 1)
+                return top.first;
 
             for (int i = 0; i < 8; i++) {
-                if (cntX + xPos[i] < 0 || cntY + yPos[i] < 0 || cntX + xPos[i] >= n || cntY + yPos[i] >= n)
+                int newX = top.second.first + xPos[i];
+                int newY = top.second.second + yPos[i];
+                if (newX < 0 || newY < 0 || newX >= n || newY >= m)
                     continue;
-                if (!visited[cntX + xPos[i]][cntY + yPos[i]]) {
-                    traversalQueue.push(make_pair(top.first + 1, make_pair(cntX + xPos[i], cntY + yPos[i])));
-                    visited[cntX + xPos[i]][cntY + yPos[i]] = true;
-                }
+                if (grid[newX][newY] == 1)
+                    continue;
+                if (distance[newX][newY] != -1)
+                    continue;
+                traversalQueue.push(make_pair(top.first + 1, make_pair(newX, newY)));
+                distance[newX][newY] = top.first + 1;
             }
         }
-        if (minCount == INT_MAX)
-            return -1;
-        return minCount;
+        return distance[n - 1][m - 1];
     }
 };
