@@ -1,24 +1,23 @@
-using namespace std;
 class Solution {
 public:
-    bool canVisitAllRooms(vector<vector<int>> &rooms) {
-        vector<bool> visited(rooms.size(), false);
-        queue<int> bfsQueue;
-        bfsQueue.push(0);
-
-        while (!bfsQueue.empty()) {
-            int index = bfsQueue.front();
-            bfsQueue.pop();
-            visited[index] = true;
-            for (int roomNum:rooms[index]) {
-                if(!visited[roomNum])
-                    bfsQueue.push(roomNum);
-            }
+    void canVisitAllRoomsUtil(vector<vector<int>> &rooms, vector<bool> &visited, int cntIndex) {
+        if (visited[cntIndex])
+            return;
+        visited[cntIndex] = true;
+        vector<int> roomKeys = rooms[cntIndex];
+        for (int foundKey : roomKeys) {
+            canVisitAllRoomsUtil(rooms, visited, foundKey);
         }
+    }
 
-        for(bool found:visited)
-            if(!found)
+    bool canVisitAllRooms(vector<vector<int>> &rooms) {
+        int n = (int) rooms.size();
+        vector<bool> visited(n, false);
+        canVisitAllRoomsUtil(rooms, visited, 0);
+        for (int i = 0; i < n; i++) {
+            if (!visited[i])
                 return false;
+        }
         return true;
     }
 };
