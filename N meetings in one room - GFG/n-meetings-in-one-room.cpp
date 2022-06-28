@@ -8,12 +8,8 @@ class Solution
     public:
     //Function to find the maximum number of meetings that can
     //be performed in a meeting room.
-    static bool compareMeetings(pair<int, int> &first, pair<int, int> &second) {
-        if (first.second < second.second)
-            return true;
-        if (first.second == second.second && first.first < second.first)
-            return true;
-        return false;
+    static bool comparator(pair<int, int> &first, pair<int, int> &second) {
+        return first.second < second.second;
     }
 
     int maxMeetings(int start[], int end[], int n) {
@@ -22,16 +18,16 @@ class Solution
         for (int i = 0; i < n; i++) {
             meetings.emplace_back(start[i], end[i]);
         }
-        sort(meetings.begin(), meetings.end(), compareMeetings);
+        sort(meetings.begin(), meetings.end(), comparator);
         int cntTime = 0;
-        int maxCount = 0;
+        int count = 0;
         for (int i = 0; i < n; i++) {
-            if (meetings.at(i).first > cntTime) {
-                maxCount++;
-                cntTime = meetings.at(i).second;
+            if (meetings[i].first > cntTime) {
+                cntTime = meetings[i].second;
+                count++;
             }
         }
-        return maxCount;
+        return count;
     }
 };
 
