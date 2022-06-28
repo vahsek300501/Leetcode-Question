@@ -23,6 +23,20 @@ struct Job
 };
 */
 
+// Program to find the maximum profit job sequence from a given array 
+// of jobs with deadlines and profits 
+
+
+ // } Driver Code Ends
+/*
+struct Job 
+{ 
+    int id;	 // Job Id 
+    int dead; // Deadline of job 
+    int profit; // Profit if job is over before or on deadline 
+};
+*/
+
 class Solution 
 {
     public:
@@ -74,6 +88,12 @@ class Solution
         return JobSchedulingUtil(jobArr, n);
     }
 };
+
+// { Driver Code Starts.
+// Driver program to test methods 
+
+
+  // } Driver Code Ends
 
 // { Driver Code Starts.
 // Driver program to test methods 
