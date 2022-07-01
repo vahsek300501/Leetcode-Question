@@ -1,34 +1,31 @@
 class Solution {
 public:
     bool isBipartite(vector<vector<int>> &graph) {
+        int n = (int) graph.size();
         queue<pair<int, int>> traversalQueue;
-        vector<bool> visited(graph.size(), false);
-        vector<int> colorArr(graph.size(), -1);
+        vector<int> visited(n, -1);
 
-        for (int i = 0; i < graph.size(); i++) {
-            if (!visited[i]) {
+
+        for (int i = 0; i < n; i++) {
+            if (visited[i] == -1) {
+                visited[i] = 0;
                 traversalQueue.push(make_pair(i, 0));
-                visited[i] = true;
-                colorArr[i] = 0;
-
                 while (!traversalQueue.empty()) {
                     pair<int, int> top = traversalQueue.front();
                     traversalQueue.pop();
-                    vector<int> edges = graph[top.first];
-                    int color = top.second == 0 ? 1 : 0;
-                    for (int edge:edges) {
-                        if (!visited[edge]) {
-                            traversalQueue.push(make_pair(edge, color));
-                            visited[edge] = true;
-                            colorArr[edge] = color;
+                    vector<int> adjacentNodes = graph[top.first];
+                    for (int node:adjacentNodes) {
+                        if (visited[node] != -1) {
+                            if (visited[node] == top.second)
+                                return false;
                             continue;
-                        } else if (colorArr[edge] == top.second)
-                            return false;
+                        }
+                        visited[node] = top.second == 1 ? 0 : 1;
+                        traversalQueue.push(make_pair(node, visited[node]));
                     }
                 }
             }
         }
-
         return true;
     }
 };
