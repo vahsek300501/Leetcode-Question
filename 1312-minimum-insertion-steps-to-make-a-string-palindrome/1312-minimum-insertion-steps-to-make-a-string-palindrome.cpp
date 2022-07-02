@@ -1,24 +1,32 @@
 class Solution {
 public:
-    int minInsertionsRecursive(string &s, int cntIndex1, int cntIndex2, vector<vector<int>> &dp) {
-        if (cntIndex1 >= cntIndex2)
-            return 0;
-        if (dp[cntIndex1][cntIndex2] != -1)
-            return dp[cntIndex1][cntIndex2];
-        if (s[cntIndex1] == s[cntIndex2]) {
-            int ans = minInsertionsRecursive(s, cntIndex1 + 1, cntIndex2 - 1, dp);
-            dp[cntIndex1][cntIndex2] = ans;
-            return ans;
+    static int longestCommonSubsequenceDynamicProgramming(string &s1, string &s2) {
+        vector<vector<int>> dp(s1.size() + 1, vector<int>(s2.size() + 1, 0));
+        for (int i = 1; i <= s1.length(); i++) {
+            for (int j = 1; j <= s2.length(); j++) {
+                if (s1[i - 1] == s2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
         }
-        int ans = 1 + min(minInsertionsRecursive(s, cntIndex1 + 1, cntIndex2, dp),
-                          minInsertionsRecursive(s, cntIndex1, cntIndex2 - 1, dp));
-        dp[cntIndex1][cntIndex2] = ans;
-        return ans;
+        return dp[(int) s1.size()][(int) s2.size()];
     }
 
-    int minInsertions(string s) {
+    static int longestCommonSubsequence(string text1, string text2) {
+        return longestCommonSubsequenceDynamicProgramming(text1, text2);
+    }
+    static int longestPalindromeSubseq(string s) {
+        string rev(s);
+        reverse(rev.begin(), rev.end());
+        return longestCommonSubsequenceDynamicProgramming(s, rev);
+    }
+    int minInsertionsDynamicProgramming(string &s) {
         int n = (int) s.length();
-        vector<vector<int>> dp(n + 1, vector<int>(n + 1, -1));
-        return minInsertionsRecursive(s, 0, n - 1, dp);
+        return n - longestPalindromeSubseq(s);
+    }
+    int minInsertions(string s) {
+        return minInsertionsDynamicProgramming(s);   
     }
 };
