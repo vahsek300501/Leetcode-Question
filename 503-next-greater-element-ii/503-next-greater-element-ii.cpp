@@ -1,32 +1,40 @@
 class Solution {
 public:
     vector<int> nextGreaterElements(vector<int> &nums) {
-        vector<int> ans(nums.size());
-        stack<int> nextGreaterStack;
-        int pass = 0;
-        while (pass < 2) {
-            for (int i = (int) nums.size() - 1; i >= 0; i--) {
-                if (nextGreaterStack.empty()) {
-                    ans.at(i) = -1;
-                    nextGreaterStack.push(nums.at(i));
-                } else {
-                    while (true) {
-                        if (nextGreaterStack.empty()) {
-                            ans.at(i) = -1;
-                            nextGreaterStack.push(nums.at(i));
-                            break;
-                        } else if (nextGreaterStack.top() > nums.at(i)) {
-                            ans.at(i) = nextGreaterStack.top();
-                            nextGreaterStack.push(nums.at(i));
-                            break;
-                        } else {
-                            nextGreaterStack.pop();
-                        }
-                    }
-                }
+        int n = (int) nums.size();
+        vector<int> ans(n, -1);
+        ans[n - 1] = -1;
+        stack<int> nextGreater;
+        nextGreater.push(nums[n - 1]);
+
+        for (int i = n - 2; i >= 0; i--) {
+            int cntElement = nums[i];
+            while (!nextGreater.empty() && nextGreater.top() <= cntElement) {
+                nextGreater.pop();
             }
-            pass++;
+            if (nextGreater.empty()) {
+                nextGreater.push(cntElement);
+                continue;
+            } else {
+                ans[i] = nextGreater.top();
+                nextGreater.push(cntElement);
+            }
         }
+
+        for (int i = n - 1; i >= 0; i--) {
+            int cntElement = nums[i];
+            while (!nextGreater.empty() && nextGreater.top() <= cntElement) {
+                nextGreater.pop();
+            }
+            if (nextGreater.empty()) {
+                nextGreater.push(cntElement);
+                continue;
+            } else {
+                ans[i] = nextGreater.top();
+                nextGreater.push(cntElement);
+            }
+        }
+
         return ans;
     }
 };
