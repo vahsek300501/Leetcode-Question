@@ -1,14 +1,18 @@
 class Solution {
 public:
-    int maxArea(vector<int>& height) {
-    int water = 0;
-    int i = 0, j = height.size() - 1;
-    while (i < j) {
-        int h = min(height[i], height[j]);
-        water = max(water, (j - i) * h);
-        while (height[i] <= h && i < j) i++;
-        while (height[j] <= h && i < j) j--;
+    int maxArea(vector<int> &height) {
+        int n = (int) height.size();
+        int first = 0;
+        int last = n - 1;
+        int maxi = INT_MIN;
+        while (first < last) {
+            int cntWater = (last - first) * min(height[first], height[last]);
+            maxi = max(maxi, cntWater);
+            if (height[first] <= height[last])
+                first++;
+            else
+                last--;
+        }
+        return maxi;
     }
-    return water;
-}
 };
