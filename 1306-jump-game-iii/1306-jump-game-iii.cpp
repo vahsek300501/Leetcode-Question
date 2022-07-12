@@ -1,30 +1,54 @@
 class Solution {
 public:
-    bool canReach(vector<int> &arr, int start) {
-        int n = (int) arr.size();
-        vector<vector<int>> graph(n, vector<int>());
-        for (int i = 0; i < n; i++) {
-            if (i + arr[i] >= 0 && i + arr[i] < n)
-                graph[i].push_back(i + arr[i]);
-            if (i - arr[i] >= 0 && i - arr[i] < n)
-                graph[i].push_back(i - arr[i]);
+    bool canReachUtil(vector<int> & arr,int start,bool * checkArr,int n) {
+        if(arr.at(start) == 0)
+            return true;
+
+        int pos1 = start+arr.at(start);
+        int pos2 = start-arr.at(start);
+        vector<int> possiblePos;
+        if(pos1 >=0 && pos1<arr.size())
+            possiblePos.push_back(pos1);
+        if(pos2 >=0 && pos2<arr.size())
+            possiblePos.push_back(pos2);
+
+        if(possiblePos.size() == 0) {
+            return false;
         }
-        vector<bool> visited(n, false);
-        queue<int> traversalQueue;
-        traversalQueue.push(start);
-        visited[start] = true;
-        while (!traversalQueue.empty()) {
-            int top = traversalQueue.front();
-            traversalQueue.pop();
-            if (arr[top] == 0)
-                return true;
-            for (int &i : graph[top]) {
-                if (visited[i])
-                    continue;
-                visited[i] = true;
-                traversalQueue.push(i);
-            }
+        if(possiblePos.size() == 1 && checkArr[possiblePos.at(0)] == true) {
+            return false;
         }
+        if(possiblePos.size() == 2 && checkArr[possiblePos.at(0)] == true && checkArr[possiblePos.at(1)] == true) {
+            return false;
+        }
+
+        if(possiblePos.size() == 1 && checkArr[possiblePos.at(0)] == false) {
+            checkArr[possiblePos.at(0)] = true;
+            return canReachUtil(arr,possiblePos.at(0),checkArr,n);
+        }
+
+        if(possiblePos.size() == 2 && checkArr[possiblePos.at(0)] == false && checkArr[possiblePos.at(1)] == false) {
+            checkArr[possiblePos.at(0)] = true;
+            checkArr[possiblePos.at(1)] = true;
+            return canReachUtil(arr,possiblePos.at(0),checkArr,n) || canReachUtil(arr,possiblePos.at(1),checkArr,n);
+        }
+        if(possiblePos.size() == 2 && checkArr[possiblePos.at(0)] == true && checkArr[possiblePos.at(1)] == false) {
+            checkArr[possiblePos.at(1)] = true;
+            return canReachUtil(arr,possiblePos.at(1),checkArr,n);
+        }
+        if(possiblePos.size() == 2 && checkArr[possiblePos.at(0)] == false && checkArr[possiblePos.at(1)] == true) {
+            checkArr[possiblePos.at(0)] = true;
+            return canReachUtil(arr,possiblePos.at(0),checkArr,n);
+        }
+
         return false;
+    }
+    bool canReach(vector<int>& arr, int start) {
+        bool * checkArr = new bool[arr.size()];
+        for(int i=0;i<arr.size();i++)
+            checkArr[i] = false;
+        checkArr[start] = true;
+        bool found = canReachUtil(arr,start,checkArr,arr.size());
+        return found;
     }
 };
