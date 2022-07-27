@@ -11,34 +11,32 @@
  */
 class Solution {
 public:
-    void flattenUtil(TreeNode *root, queue<TreeNode *>& preorderQueue) {
+    pair<TreeNode *, TreeNode *> flattenUtil(TreeNode *root) {
         if (root == nullptr)
-            return;
-        preorderQueue.push(root);
-        flattenUtil(root->left, preorderQueue);
-        flattenUtil(root->right, preorderQueue);
+            return make_pair(nullptr, nullptr);
+        TreeNode *leftTmp = root->left;
+        TreeNode *rightTmp = root->right;
+        root->left = nullptr;
+        root->right = nullptr;
+        pair<TreeNode *, TreeNode *> leftFlattened = flattenUtil(leftTmp);
+        pair<TreeNode *, TreeNode *> rightFlattened = flattenUtil(rightTmp);
+        if (leftFlattened.first == nullptr && rightFlattened.first == nullptr) {
+            return make_pair(root, root);
+        } else if (leftFlattened.first == nullptr && rightFlattened.first != nullptr) {
+            root->right = rightFlattened.first;
+            return make_pair(root, rightFlattened.second);
+        } else if (leftFlattened.first != nullptr && rightFlattened.first == nullptr) {
+            root->right = leftFlattened.first;
+            return make_pair(root, leftFlattened.second);
+        } else {
+            root->right = leftFlattened.first;
+            leftFlattened.second->right = rightFlattened.first;
+            return make_pair(root, rightFlattened.second);
+        }
+        return make_pair(nullptr, nullptr);
     }
 
     void flatten(TreeNode *root) {
-        if (root == nullptr)
-            return;
-        queue<TreeNode *> preorderQueue;
-        flattenUtil(root, preorderQueue);
-
-        TreeNode *front = preorderQueue.front();
-        TreeNode *tail = preorderQueue.front();
-        front->right = nullptr;
-        front->left = nullptr;
-        preorderQueue.pop();
-
-        while (!preorderQueue.empty()) {
-            TreeNode *tmp = preorderQueue.front();
-            preorderQueue.pop();
-            tmp->left = nullptr;
-            tmp->right = nullptr;
-            tail->right = tmp;
-            tail = tmp;
-        }
-        root = front;
+        flattenUtil(root);
     }
 };
