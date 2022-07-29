@@ -25,7 +25,7 @@ public:
 
     vector<string> findAndReplacePattern(vector<string> &words, string pattern) {
         vector<string> ans;
-        for (string tmpWord : words) {
+        for (string &tmpWord : words) {
             if (isPatternFound(tmpWord, pattern))
                 ans.push_back(tmpWord);
         }
