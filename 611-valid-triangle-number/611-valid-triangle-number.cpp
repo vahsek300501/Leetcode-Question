@@ -1,13 +1,20 @@
 class Solution {
 public:
-    int getTriangularNumberIndex(vector<int> &nums, int first, int last, int sum) {
-        int start = first;
-        int end = last;
-        int ans = -1;
+    bool validNumber(int firstEdge, int secondEdge, int thirdEdge) {
+        if (firstEdge + secondEdge > thirdEdge && secondEdge + thirdEdge > firstEdge &&
+            thirdEdge + firstEdge > secondEdge && abs(firstEdge - secondEdge) < thirdEdge &&
+            abs(secondEdge - thirdEdge) < firstEdge && abs(thirdEdge - firstEdge) < secondEdge)
+            return true;
+        return false;
+    }
+
+    int getTriangularNumberCount(vector<int> &nums, int start, int end, int firstEdge, int secondEdge) {
+        int ans = 0;
         while (start <= end) {
             int mid = start + ((end - start) / 2);
-            if (nums[mid] < sum) {
-                ans = mid;
+            bool validNumbersFound = validNumber(firstEdge, secondEdge, nums[mid]);
+            if (validNumbersFound) {
+                ans += mid - start + 1;
                 start = mid + 1;
             } else {
                 end = mid - 1;
@@ -17,19 +24,16 @@ public:
     }
 
     int triangleNumber(vector<int> &nums) {
+        int n = (int) nums.size();
         sort(nums.begin(), nums.end());
-        int countNums = 0;
-
-        for (int i = 0; i < nums.size(); i++) {
-            for (int j = i + 1; j < nums.size(); j++) {
-                int first = nums[i];
-                int second = nums[j];
-                int thirdIndex = getTriangularNumberIndex(nums, j + 1, (int) nums.size() - 1, first + second);
-                if (thirdIndex != -1) {
-                    countNums += (thirdIndex - j);
-                }
+        int triangularNumberCount = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int firstEdge = nums[i];
+                int secondEdge = nums[j];
+                triangularNumberCount += getTriangularNumberCount(nums, j + 1, n - 1, firstEdge, secondEdge);
             }
         }
-        return countNums;
+        return triangularNumberCount;
     }
 };
