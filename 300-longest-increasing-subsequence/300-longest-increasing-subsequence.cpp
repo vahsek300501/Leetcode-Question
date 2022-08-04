@@ -1,20 +1,19 @@
 class Solution {
 public:
-    int lengthOfLISBinarySearch(vector<int> &nums) {
+    int lengthOfLIS(vector<int> &nums) {
         int n = (int) nums.size();
-        vector<int> cntSequence;
-        cntSequence.push_back(nums[0]);
+        vector<int> dp(n, 1);
         for (int i = 1; i < n; i++) {
-            int cntElement = nums[i];
-            int index = lower_bound(cntSequence.begin(), cntSequence.end(), cntElement) - cntSequence.begin();
-            if (index >= (int) cntSequence.size())
-                cntSequence.push_back(cntElement);
-            else
-                cntSequence[index] = cntElement;
+            int prevMax = 0;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[j] < nums[i] && dp[j] > prevMax) {
+                    prevMax = dp[j];
+                }
+            }
+            dp[i] = prevMax + 1;
         }
-        return (int) cntSequence.size();
-    }
-    int lengthOfLIS(vector<int>& nums) {
-        return lengthOfLISBinarySearch(nums);   
+
+        int maxi = *max_element(dp.begin(), dp.end());
+        return maxi;
     }
 };
