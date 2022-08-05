@@ -1,22 +1,20 @@
 class Solution {
 public:
-    int combinationSumUtil(vector<int> &nums, int cntSum, int target, vector<int> &dp) {
-        if (cntSum > target)
-            return 0;
-        if (cntSum == target)
-            return 1;
-        if (dp[cntSum] != -1)
-            return dp[cntSum];
-        int ans = 0;
-        for (int i = 0; i < (int) nums.size(); i++) {
-            ans += combinationSumUtil(nums, cntSum + nums[i], target,dp);
+    int combinationSumDP(vector<int> &nums, int target) {
+        int n = (int) nums.size();
+        vector<double> dp(target + 1, 0);
+        dp[0] = 1;
+        for (int i = 1; i <= target; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i - nums[j] >= 0) {
+                    dp[i] += (dp[i - nums[j]]);
+                }
+            }
         }
-        dp[cntSum] = ans;
-        return ans;
+        return (int) dp[target];
     }
 
     int combinationSum4(vector<int> &nums, int target) {
-        vector<int> dp(target + 1, -1);
-        return combinationSumUtil(nums, 0, target, dp);
+        return combinationSumDP(nums, target);
     }
 };
