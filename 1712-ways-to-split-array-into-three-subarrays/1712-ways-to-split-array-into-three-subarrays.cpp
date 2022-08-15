@@ -45,7 +45,7 @@ public:
     int waysToSplit(vector<int> &nums) {
         int n = (int) nums.size();
         vector<long long int> prefixSum(n, -1);
-        long long int ans = 0;
+        int ans = 0;
         prefixSum[0] = nums[0];
         for (int i = 1; i < n; i++) {
             prefixSum[i] = prefixSum[i - 1] + nums[i];
@@ -57,9 +57,8 @@ public:
                 continue;
             int end = findSecondThirdSumEnd(prefixSum, i + 1, n - 2, firstSum);
             int tmp = (start - end + 1)%MOD;
-            ans += tmp;
-            ans = (ans%MOD);
+            ans = ((ans % MOD) + (tmp % MOD)) % MOD;
         }
-        return (int)ans;
+        return ans;
     }
 };
