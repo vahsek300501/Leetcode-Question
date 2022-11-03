@@ -11,7 +11,7 @@ public:
 
         int palindromeLengthCount = 0;
         bool isSingleWordTaken = false;
-        for (string word: words) {
+        for (string& word: words) {
             string revWord = word;
             reverse(revWord.begin(), revWord.end());
             if (word == revWord && freqMap[word] % 2 == 0) {
