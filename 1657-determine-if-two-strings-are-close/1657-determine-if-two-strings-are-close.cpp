@@ -1,8 +1,6 @@
 class Solution {
 public:
     bool closeStrings(string word1, string word2) {
-        sort(word1.begin(), word1.end());
-        sort(word2.begin(), word2.end());
         vector<int> charFreqStr1(26, 0);
         vector<int> charFreqStr2(26, 0);
         for (char ch: word1) {
