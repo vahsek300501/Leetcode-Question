@@ -20,10 +20,7 @@ public:
             bool found = false;
             for (int j = i + 1; j < 26; j++) {
                 if (charFreqStr1[j] == charFreqStr2[i] && charFreqStr1[j] != 0) {
-                    int tmp = charFreqStr1[i];
-                    charFreqStr1[i] = charFreqStr1[j];
-                    charFreqStr1[j] = tmp;
-//                    swap(charFreqStr1[j], charFreqStr1[i]);
+                    swap(charFreqStr1[j], charFreqStr1[i]);
                     found = true;
                     break;
                 }
