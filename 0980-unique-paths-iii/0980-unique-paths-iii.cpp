@@ -1,7 +1,7 @@
 class Solution {
 public:
     int getUniquePathCount(vector<vector<int>> &grid, vector<vector<bool>> &visited, int endX,
-                           int endY, int cntWalkable, int &countPaths, int cntX, int cntY, int n, int m) {
+                           int endY, int cntWalkable, int cntX, int cntY, int n, int m) {
         if (cntX < 0 || cntY < 0 || cntX >= n || cntY >= m)
             return 0;
         if (visited[cntX][cntY])
@@ -9,20 +9,18 @@ public:
         if (grid[cntX][cntY] == -1)
             return 0;
         if (cntX == endX && cntY == endY) {
-            if (cntWalkable == 0) {
-                countPaths++;
+            if (cntWalkable == 0)
                 return 1;
-            }
             return 0;
         }
         visited[cntX][cntY] = true;
-        int top = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, countPaths, cntX + 1,
+        int top = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, cntX + 1,
                                      cntY, n, m);
-        int bottom = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, countPaths,
+        int bottom = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1,
                                         cntX - 1, cntY, n, m);
-        int left = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, countPaths, cntX,
+        int left = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, cntX,
                                       cntY + 1, n, m);
-        int right = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, countPaths, cntX,
+        int right = getUniquePathCount(grid, visited, endX, endY, cntWalkable - 1, cntX,
                                        cntY - 1, n, m);
         visited[cntX][cntY] = false;
         return top + bottom + left + right;
@@ -50,9 +48,8 @@ public:
                 }
             }
         }
-        int countPaths = 0;
-        int ans = getUniquePathCount(grid, visited, endX, endY, countWalkable + 1, countPaths, startX,
+        int ans = getUniquePathCount(grid, visited, endX, endY, countWalkable + 1, startX,
                                      startY, n, m);
-        return countPaths;
+        return ans;
     }
 };
