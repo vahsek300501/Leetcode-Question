@@ -1,6 +1,6 @@
 class Solution {
 public:
-    vector<char> rotateRow(vector<char> &cntRow) {
+    vector<char> rotateRow(vector<char> cntRow) {
         int n = (int) cntRow.size();
         vector<char> rotatedRow(n, '.');
         int cntBlock = n;
